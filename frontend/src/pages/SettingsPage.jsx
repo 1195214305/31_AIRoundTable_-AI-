@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Edit2, Save, X, Info } from 'lucide-react';
+import { Plus, Trash2, Edit2, Save, X, Info, Key, CheckCircle, XCircle } from 'lucide-react';
 import useStore from '../store/useStore';
 
 export default function SettingsPage() {
-  const { models, addModel, updateModel, removeModel, setShowApiKeyModal } = useStore();
+  const { models, addModel, updateModel, removeModel, setShowApiKeyModal, apiKeys, setApiKey } = useStore();
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
@@ -68,16 +68,86 @@ export default function SettingsPage() {
 
         {/* API Keys */}
         <div className="glass-card p-6 space-y-4">
-          <h2 className="text-xl font-bold text-gray-900">API密钥配置</h2>
-          <p className="text-sm text-gray-600">
-            配置各AI提供商的API密钥以使用对应的模型
-          </p>
-          <button
-            onClick={() => setShowApiKeyModal(true)}
-            className="btn-primary"
-          >
-            配置API密钥
-          </button>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">API密钥配置</h2>
+              <p className="text-sm text-gray-600">
+                配置各AI提供商的API密钥以使用对应的模型
+              </p>
+            </div>
+            <button
+              onClick={() => setShowApiKeyModal(true)}
+              className="btn-primary"
+            >
+              配置API密钥
+            </button>
+          </div>
+
+          {/* 已配置的API密钥列表 */}
+          {Object.keys(apiKeys).length > 0 ? (
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-gray-700">已配置的密钥</h3>
+              <div className="space-y-2">
+                {Object.entries(apiKeys).map(([provider, key]) => {
+                  const providerNames = {
+                    qwen: '千问 (Qwen)',
+                    openai: 'OpenAI (GPT)',
+                    anthropic: 'Anthropic (Claude)',
+                    google: 'Google (Gemini)',
+                    ernie: '文心一言 (ERNIE)',
+                    spark: '讯飞星火 (Spark)',
+                    glm: '智谱GLM (ChatGLM)',
+                    moonshot: '月之暗面 (Moonshot)',
+                    deepseek: 'DeepSeek'
+                  };
+
+                  return (
+                    <div
+                      key={provider}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">
+                            {providerNames[provider] || provider}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {key.substring(0, 8)}...{key.substring(key.length - 4)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setShowApiKeyModal(true)}
+                          className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                        >
+                          更换
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (confirm(`确定要删除${providerNames[provider] || provider}的API密钥吗？`)) {
+                              setApiKey(provider, '');
+                            }
+                          }}
+                          className="text-sm text-red-600 hover:text-red-700 font-medium"
+                        >
+                          删除
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <XCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+              <p className="text-sm text-yellow-800">
+                还未配置任何API密钥，请点击上方按钮进行配置
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Models */}

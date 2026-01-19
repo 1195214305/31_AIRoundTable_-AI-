@@ -1,10 +1,11 @@
-import { X, Key } from 'lucide-react';
+import { X, Key, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import useStore from '../store/useStore';
 
 export default function ApiKeyModal() {
   const { showApiKeyModal, setShowApiKeyModal, apiKeys, setApiKey, models } = useStore();
   const [localKeys, setLocalKeys] = useState({});
+  const [showKeys, setShowKeys] = useState({});
 
   if (!showApiKeyModal) return null;
 
@@ -60,16 +61,36 @@ export default function ApiKeyModal() {
               <div key={provider} className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">
                   {providerNames[provider] || provider}
+                  {apiKeys[provider] && (
+                    <span className="ml-2 text-xs text-green-600">✓ 已配置</span>
+                  )}
                 </label>
-                <input
-                  type="password"
-                  placeholder={`输入${providerNames[provider] || provider}的API密钥`}
-                  defaultValue={apiKeys[provider] || ''}
-                  onChange={(e) =>
-                    setLocalKeys((prev) => ({ ...prev, [provider]: e.target.value }))
-                  }
-                  className="input-field"
-                />
+                <div className="relative">
+                  <input
+                    type={showKeys[provider] ? 'text' : 'password'}
+                    placeholder={`输入${providerNames[provider] || provider}的API密钥`}
+                    defaultValue={apiKeys[provider] || ''}
+                    onChange={(e) =>
+                      setLocalKeys((prev) => ({ ...prev, [provider]: e.target.value }))
+                    }
+                    className="input-field pr-10"
+                  />
+                  {(apiKeys[provider] || localKeys[provider]) && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowKeys((prev) => ({ ...prev, [provider]: !prev[provider] }))
+                      }
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showKeys[provider] ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
+                    </button>
+                  )}
+                </div>
                 <p className="text-xs text-gray-500">
                   {provider === 'qwen' && '获取地址: https://dashscope.console.aliyun.com/apiKey'}
                   {provider === 'openai' && '获取地址: https://platform.openai.com/api-keys'}
