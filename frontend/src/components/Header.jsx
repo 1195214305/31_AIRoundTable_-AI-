@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Settings, History, MessageSquare } from 'lucide-react';
-import useStore from '../store/useStore';
 
 export default function Header() {
-  const { setShowSettings } = useStore();
-
   return (
     <header className="glass-card sticky top-0 z-50 border-b">
       <div className="container mx-auto px-4 py-4">
@@ -29,13 +26,13 @@ export default function Header() {
             >
               <History className="w-5 h-5 text-gray-600" />
             </Link>
-            <button
-              onClick={() => setShowSettings(true)}
+            <Link
+              to="/settings"
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
               title="设置"
             >
               <Settings className="w-5 h-5 text-gray-600" />
-            </button>
+            </Link>
           </nav>
         </div>
       </div>
