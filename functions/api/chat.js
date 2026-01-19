@@ -188,7 +188,17 @@ async function callGoogle(messages, apiKey, systemPrompt, model = 'gemini-pro') 
 /**
  * 主处理函数
  */
-export default async function handler(request, corsHeaders) {
+export default async function handler(request) {
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  }
+
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders })
+  }
+
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: '仅支持POST请求' }), {
       status: 405,
