@@ -23,7 +23,12 @@ export default function ApiKeyModal() {
     qwen: '千问 (Qwen)',
     openai: 'OpenAI (GPT)',
     anthropic: 'Anthropic (Claude)',
-    google: 'Google (Gemini)'
+    google: 'Google (Gemini)',
+    ernie: '文心一言 (ERNIE)',
+    spark: '讯飞星火 (Spark)',
+    glm: '智谱GLM (ChatGLM)',
+    moonshot: '月之暗面 (Moonshot)',
+    deepseek: 'DeepSeek'
   };
 
   return (
@@ -70,6 +75,11 @@ export default function ApiKeyModal() {
                   {provider === 'openai' && '获取地址: https://platform.openai.com/api-keys'}
                   {provider === 'anthropic' && '获取地址: https://console.anthropic.com/'}
                   {provider === 'google' && '获取地址: https://makersuite.google.com/app/apikey'}
+                  {provider === 'ernie' && '获取地址: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application'}
+                  {provider === 'spark' && '获取地址: https://console.xfyun.cn/services/bm3'}
+                  {provider === 'glm' && '获取地址: https://open.bigmodel.cn/usercenter/apikeys'}
+                  {provider === 'moonshot' && '获取地址: https://platform.moonshot.cn/console/api-keys'}
+                  {provider === 'deepseek' && '获取地址: https://platform.deepseek.com/api_keys'}
                 </p>
               </div>
             ))}

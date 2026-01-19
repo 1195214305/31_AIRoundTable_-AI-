@@ -84,7 +84,8 @@ export default function SessionPage() {
           model.name,
           messages,
           apiKeys[model.provider],
-          model.systemPrompt
+          model.systemPrompt,
+          model.modelId
         );
 
         // 添加AI回复

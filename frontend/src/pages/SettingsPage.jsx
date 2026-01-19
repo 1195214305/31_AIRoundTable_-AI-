@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Trash2, Edit2, Save, X } from 'lucide-react';
+import { Plus, Trash2, Edit2, Save, X, Info } from 'lucide-react';
 import useStore from '../store/useStore';
 
 export default function SettingsPage() {
@@ -24,20 +24,34 @@ export default function SettingsPage() {
     setEditForm({});
   };
 
-  const handleAddModel = () => {
-    const name = prompt('输入模型名称:');
-    if (!name) return;
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newModel, setNewModel] = useState({
+    name: '',
+    modelId: '',
+    provider: 'qwen',
+    systemPrompt: '你是一位AI助手。',
+    avatar: '🤖'
+  });
 
-    const provider = prompt('输入提供商 (qwen/openai/anthropic/google):');
-    if (!provider) return;
+  const handleAddModel = () => {
+    if (!newModel.name || !newModel.modelId) {
+      alert('请填写模型名称和模型ID');
+      return;
+    }
 
     addModel({
-      name,
-      provider,
+      ...newModel,
+      enabled: true
+    });
+
+    setNewModel({
+      name: '',
+      modelId: '',
+      provider: 'qwen',
       systemPrompt: '你是一位AI助手。',
-      enabled: true,
       avatar: '🤖'
     });
+    setShowAddModal(false);
   };
 
   return (
@@ -71,7 +85,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">AI模型管理</h2>
             <button
-              onClick={handleAddModel}
+              onClick={() => setShowAddModal(true)}
               className="flex items-center space-x-2 btn-secondary"
             >
               <Plus className="w-4 h-4" />
@@ -178,6 +192,135 @@ export default function SettingsPage() {
           </div>
         </div>
       </motion.div>
+
+      {/* 添加模型模态框 */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-card max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="p-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900">添加AI模型</h2>
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    AI提供商
+                  </label>
+                  <select
+                    value={newModel.provider}
+                    onChange={(e) => setNewModel({ ...newModel, provider: e.target.value })}
+                    className="input-field"
+                  >
+                    <option value="qwen">千问 (Qwen)</option>
+                    <option value="openai">OpenAI (GPT)</option>
+                    <option value="anthropic">Anthropic (Claude)</option>
+                    <option value="google">Google (Gemini)</option>
+                    <option value="ernie">文心一言 (ERNIE)</option>
+                    <option value="spark">讯飞星火 (Spark)</option>
+                    <option value="glm">智谱GLM (ChatGLM)</option>
+                    <option value="moonshot">月之暗面 (Moonshot)</option>
+                    <option value="deepseek">DeepSeek</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    模型名称（显示名称）
+                  </label>
+                  <input
+                    type="text"
+                    value={newModel.name}
+                    onChange={(e) => setNewModel({ ...newModel, name: e.target.value })}
+                    placeholder="例如：Qwen-Max"
+                    className="input-field"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    模型ID（API调用时使用的模型标识）
+                  </label>
+                  <input
+                    type="text"
+                    value={newModel.modelId}
+                    onChange={(e) => setNewModel({ ...newModel, modelId: e.target.value })}
+                    placeholder="例如：qwen-max"
+                    className="input-field"
+                  />
+                  <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="flex items-start space-x-2">
+                      <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-xs text-blue-800">
+                        <p className="font-semibold mb-1">常用模型ID参考：</p>
+                        <ul className="space-y-1">
+                          <li>• 千问：qwen-plus, qwen-max, qwen-turbo</li>
+                          <li>• OpenAI：gpt-4, gpt-3.5-turbo, gpt-4-turbo</li>
+                          <li>• Claude：claude-3-opus-20240229, claude-3-sonnet-20240229</li>
+                          <li>• Gemini：gemini-pro, gemini-1.5-pro</li>
+                          <li>• 文心：ernie-4.0, ernie-3.5</li>
+                          <li>• 星火：spark-3.5, spark-pro</li>
+                          <li>• GLM：glm-4, glm-3-turbo</li>
+                          <li>• Moonshot：moonshot-v1-8k, moonshot-v1-32k</li>
+                          <li>• DeepSeek：deepseek-chat, deepseek-coder</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    系统提示词（人设）
+                  </label>
+                  <textarea
+                    value={newModel.systemPrompt}
+                    onChange={(e) => setNewModel({ ...newModel, systemPrompt: e.target.value })}
+                    placeholder="定义AI的角色和行为..."
+                    className="input-field min-h-[100px]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    头像（Emoji）
+                  </label>
+                  <input
+                    type="text"
+                    value={newModel.avatar}
+                    onChange={(e) => setNewModel({ ...newModel, avatar: e.target.value })}
+                    placeholder="🤖"
+                    className="input-field"
+                    maxLength={2}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => setShowAddModal(false)}
+                  className="btn-secondary"
+                >
+                  取消
+                </button>
+                <button onClick={handleAddModel} className="btn-primary">
+                  添加模型
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

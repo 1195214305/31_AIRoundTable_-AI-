@@ -16,6 +16,7 @@ const useStore = create(
         {
           id: 'qwen-1',
           name: 'Qwen-Plus',
+          modelId: 'qwen-plus',
           provider: 'qwen',
           systemPrompt: '你是一位富有创造力的思考者，善于提出新颖的观点和解决方案。',
           enabled: true,
@@ -24,17 +25,19 @@ const useStore = create(
         {
           id: 'gpt-1',
           name: 'GPT-4',
+          modelId: 'gpt-4',
           provider: 'openai',
           systemPrompt: '你是一位严谨的分析师，善于逻辑推理和批判性思考。',
-          enabled: true,
+          enabled: false,
           avatar: '🧠'
         },
         {
           id: 'claude-1',
-          name: 'Claude-3',
+          name: 'Claude-3-Sonnet',
+          modelId: 'claude-3-sonnet-20240229',
           provider: 'anthropic',
           systemPrompt: '你是一位平衡的协调者，善于综合各方观点并寻找共识。',
-          enabled: true,
+          enabled: false,
           avatar: '💡'
         }
       ],

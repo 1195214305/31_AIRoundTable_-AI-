@@ -34,10 +34,11 @@ api.interceptors.response.use(
 // API方法
 export const chatAPI = {
   // 发送消息到AI模型
-  sendMessage: async (provider, model, messages, apiKey, systemPrompt) => {
+  sendMessage: async (provider, model, messages, apiKey, systemPrompt, modelId) => {
     return api.post('/chat', {
       provider,
       model,
+      modelId,
       messages,
       apiKey,
       systemPrompt
