@@ -1,0 +1,14 @@
+{
+  "name": "ai-roundtable",
+  "version": "2.0.0",
+  "description": "多AI圆桌会议系统 - 让多个AI模型协作讨论，迭代出更优秀的答案",
+  "private": true,
+  "scripts": {
+    "install": "cd frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "dev": "cd frontend && npm run dev"
+  },
+  "keywords": ["ai", "roundtable", "collaboration", "edge-computing"],
+  "author": "",
+  "license": "MIT"
+}
